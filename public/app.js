@@ -294,6 +294,7 @@ function showConnected() {
 }
 
 // ===== Start Game Hub =====
+function startPlaying() {
     show('gameHub'); 
     hide('connectedStatus');
     show('actionBar', 'flex');
@@ -408,7 +409,7 @@ socket.on('connected_status', (data) => {
     isHost = data.isHost;
     
     showConnBar(`🟢 เชื่อมต่อแล้วกับ: ${partnerName}`, true);
-    show('connectionActions', 'flex'); // Show Send Hug & Reactions
+    show('actionBar', 'flex'); // Show Send Hug & Reactions
     showConnected();
 });
 
@@ -418,7 +419,7 @@ socket.on('match_found', (data) => {
     isHost = data.isHost;
     
     showConnBar(`🟢 เชื่อมต่อสำเร็จ! คู่เล่นสุ่ม: ${partnerName}`, true);
-    show('connectionActions', 'flex');
+    show('actionBar', 'flex');
     showConnected();
     
     // Update URL
@@ -461,7 +462,7 @@ socket.on('reaction_received', (data) => {
 
 socket.on('partner_disconnected', () => {
     showConnBar('🔴 แฟน/คู่เล่นหลุดการเชื่อมต่อ', false);
-    hide('connectionActions');
+    hide('actionBar');
     alert('แฟนหรือคู่เล่นของคุณออกจากการเชื่อมต่อแล้ว ระบบจะรีเซ็ตกลับสู่หน้าหลัก');
     window.location.href = window.location.pathname; // Reload to main page cleanly
 });
