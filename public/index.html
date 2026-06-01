@@ -1,0 +1,436 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="เลิกเถียง มาเล่นเกมกัน - แพลตฟอร์มเกมสำหรับคู่รัก เล่นด้วยกันออนไลน์แบบเรียลไทม์ทั่วโลก">
+  <title>เลิกเถียง มาเล่นเกมกัน 💕 (Stop Arguing Global)</title>
+  <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- Connection Bar -->
+  <div id="connectionBar" class="conn-bar">
+    <div class="conn-dot" id="connectionDot"></div>
+    <span id="connectionText">ยังไม่ได้เชื่อมต่อ</span>
+    
+    <!-- Quick interactions enabled on connection -->
+    <div id="connectionActions" class="conn-actions" style="display:none">
+      <button class="btn-action-small" onclick="sendHug()">🤗 ส่งกอด</button>
+      <button class="btn-action-small" onclick="sendReaction('❤️')">❤️</button>
+      <button class="btn-action-small" onclick="sendReaction('😂')">😂</button>
+      <button class="btn-action-small" onclick="sendReaction('😮')">😮</button>
+    </div>
+  </div>
+
+  <!-- Particle Canvas -->
+  <canvas id="particles" class="particles-bg"></canvas>
+
+  <!-- Hero Section -->
+  <header class="hero" id="hero">
+    <div class="hero-content">
+      <div class="hero-badge">🎮 GLOBAL COUPLES GAME PLATFORM</div>
+      <h1 class="hero-title">เลิกเถียง<br><span class="gradient-text">มาเล่นเกมกัน</span></h1>
+      <p class="hero-sub">8 เกมสุดสนุกสำหรับคู่รักและผองเพื่อน เล่นด้วยกันออนไลน์เรียลไทม์ได้ทั่วโลก 💕</p>
+      <button class="btn-primary btn-glow" onclick="scrollToSection('roomSection')">
+        <span>🚀 เริ่มเล่นเลย!</span>
+      </button>
+    </div>
+    <div class="hero-scroll">
+      <div class="scroll-mouse"><div class="scroll-wheel"></div></div>
+      <span>เลื่อนลง</span>
+    </div>
+  </header>
+
+  <!-- Room & Lobby Section -->
+  <section id="roomSection" class="section">
+    <div class="section-inner">
+      <div class="section-badge">🌐 MULTIPLAYER LOBBY</div>
+      <h2 class="section-title">เชื่อมต่อเพื่อเริ่มเกม</h2>
+      <p class="section-desc">บันทึกชื่อของคุณ เลือกสุ่มจับคู่ทั่วโลก หรือชวนแฟนเข้าห้องเล่นเกม</p>
+
+      <div id="nameInputArea" class="name-input-area">
+        <input type="text" id="myName" class="input-neon" placeholder="✨ กรอกชื่อของคุณที่นี่" maxlength="20">
+      </div>
+
+      <div id="roomOptions" class="room-grid">
+        <button class="room-card card-match" onclick="startMatchmaking()">
+          <div class="room-card-emoji">⚡</div>
+          <h3>จับคู่คนเล่น</h3>
+          <p>สุ่มคนเล่นออนไลน์เรียลไทม์</p>
+        </button>
+        <button class="room-card card-create" onclick="createRoom()">
+          <div class="room-card-emoji">🏠</div>
+          <h3>สร้างห้อง</h3>
+          <p>สร้างห้องชวนแฟนด้วยรหัส</p>
+        </button>
+        <button class="room-card card-join" onclick="showJoinRoom()">
+          <div class="room-card-emoji">🔗</div>
+          <h3>เข้าร่วมห้อง</h3>
+          <p>ใส่รหัส 6 หลักเข้าร่วมแฟน</p>
+        </button>
+      </div>
+
+      <!-- Matchmaking Area -->
+      <div id="matchmakingArea" class="matchmaking-area" style="display:none">
+        <div class="spinner-container">
+          <div class="double-bounce1"></div>
+          <div class="double-bounce2"></div>
+        </div>
+        <p id="matchmakingText">กำลังสุ่มหาคู่เล่นจากทั่วโลก... ⏳</p>
+        <button class="btn-ghost" onclick="cancelMatchmaking()">❌ ยกเลิกการค้นหา</button>
+      </div>
+
+      <!-- Join Area -->
+      <div id="joinArea" class="join-area" style="display:none">
+        <input type="text" id="roomCodeInput" class="input-neon input-code" placeholder="ใส่รหัส 6 หลัก" maxlength="6">
+        <button class="btn-primary" onclick="joinRoom()">🔗 เข้าร่วม</button>
+        <button class="btn-ghost" onclick="showRoomOptions()">← กลับ</button>
+      </div>
+
+      <!-- Room Created (Host State) -->
+      <div id="roomCreated" class="room-created" style="display:none">
+        <div class="code-box">
+          <div class="code-label">รหัสห้องของคุณ</div>
+          <div id="roomCodeDisplay" class="code-display">------</div>
+          <div class="code-buttons">
+            <button class="btn-copy" onclick="copyRoomCode()">
+              <span id="copyCodeText">📋 คัดลอกรหัส</span>
+            </button>
+            <button class="btn-copy" onclick="copyRoomLink()">
+              <span id="copyLinkText">🔗 ลิงก์ด่วน</span>
+            </button>
+          </div>
+        </div>
+        <div class="waiting-anim">
+          <div class="waiting-dots"><span></span><span></span><span></span></div>
+          <p id="waitingText">ส่งรหัสหรือลิงก์ให้แฟนแล้วรอการเชื่อมต่อ...</p>
+        </div>
+      </div>
+
+      <!-- Connected Box -->
+      <div id="connectedStatus" class="connected-box" style="display:none">
+        <div class="connected-emoji">💕</div>
+        <h3 id="connectedText">เชื่อมต่อสำเร็จ!</h3>
+        <p id="partnerNameDisplay"></p>
+        <button class="btn-primary btn-glow btn-play" onclick="startPlaying()">🎮 เข้าสู่ห้องเลือกเกม!</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- Game Hub -->
+  <main id="gameHub" style="display:none">
+    <section class="section">
+      <div class="section-inner">
+        <div class="section-badge">🎮 SELECT GAME</div>
+        <h2 class="section-title">เลือกเกมย่อย</h2>
+        <p class="section-desc">คลิกเลือกเกมที่คุณสองคนต้องการประลองฝีมือกัน!</p>
+        <div class="game-grid" id="gameGrid">
+
+          <button class="game-card" onclick="openGame('truthdare')" style="--card-color: #ff6b9d; --card-glow: rgba(255,107,157,0.3)">
+            <div class="game-card-glow"></div>
+            <div class="game-card-icon">🎯</div>
+            <div class="game-card-info">
+              <h3>ความจริงหรือท้า</h3>
+              <p>สุ่มคำถามสนุกๆ 50+ ข้อ</p>
+            </div>
+            <span class="game-card-tag tag-party">🎭 ปาร์ตี้</span>
+          </button>
+
+          <button class="game-card" onclick="openGame('wouldyou')" style="--card-color: #a855f7; --card-glow: rgba(168,85,247,0.3)">
+            <div class="game-card-glow"></div>
+            <div class="game-card-icon">🤔</div>
+            <div class="game-card-info">
+              <h3>คุณจะเลือก...</h3>
+              <p>ดูว่าเราตรงกันไหม!</p>
+            </div>
+            <span class="game-card-tag tag-couple">💕 คู่รัก</span>
+          </button>
+
+          <button class="game-card" onclick="openGame('tictactoe')" style="--card-color: #ef4444; --card-glow: rgba(239,68,68,0.3)">
+            <div class="game-card-glow"></div>
+            <div class="game-card-icon">⭕</div>
+            <div class="game-card-info">
+              <h3>โอเอกซ์รัก</h3>
+              <p>❤️ vs ⭐ ใครชนะ!</p>
+            </div>
+            <span class="game-card-tag tag-versus">⚔️ แข่งขัน</span>
+          </button>
+
+          <button class="game-card" onclick="openGame('memory')" style="--card-color: #06d6a0; --card-glow: rgba(6,214,160,0.3)">
+            <div class="game-card-glow"></div>
+            <div class="game-card-icon">🧠</div>
+            <div class="game-card-info">
+              <h3>จับคู่ความจำ</h3>
+              <p>พลิกการ์ดจับคู่ 4x4</p>
+            </div>
+            <span class="game-card-tag tag-puzzle">🧩 ปริศนา</span>
+          </button>
+
+          <button class="game-card" onclick="openGame('quicktap')" style="--card-color: #fbbf24; --card-glow: rgba(251,191,36,0.3)">
+            <div class="game-card-glow"></div>
+            <div class="game-card-icon">⚡</div>
+            <div class="game-card-info">
+              <h3>กดเร็วไว</h3>
+              <p>วัดปฏิกิริยา ใครเร็วกว่า!</p>
+            </div>
+            <span class="game-card-tag tag-versus">⚔️ แข่งขัน</span>
+          </button>
+
+          <button class="game-card" onclick="openGame('dice')" style="--card-color: #3b82f6; --card-glow: rgba(59,130,246,0.3)">
+            <div class="game-card-glow"></div>
+            <div class="game-card-icon">🎲</div>
+            <div class="game-card-info">
+              <h3>ทอยลูกเต๋า</h3>
+              <p>ทอยแข่ง ใครได้มากชนะ!</p>
+            </div>
+            <span class="game-card-tag tag-party">🎭 ปาร์ตี้</span>
+          </button>
+
+          <button class="game-card" onclick="openGame('compatible')" style="--card-color: #ec4899; --card-glow: rgba(236,72,153,0.3)">
+            <div class="game-card-glow"></div>
+            <div class="game-card-icon">💕</div>
+            <div class="game-card-info">
+              <h3>ทดสอบความเข้ากัน</h3>
+              <p>เราแมตช์กันกี่ %</p>
+            </div>
+            <span class="game-card-tag tag-couple">💕 คู่รัก</span>
+          </button>
+
+          <button class="game-card" onclick="openGame('highlow')" style="--card-color: #8b5cf6; --card-glow: rgba(139,92,246,0.3)">
+            <div class="game-card-glow"></div>
+            <div class="game-card-icon">🃏</div>
+            <div class="game-card-info">
+              <h3>สูงหรือต่ำ</h3>
+              <p>เดาไพ่ใบต่อไป!</p>
+            </div>
+            <span class="game-card-tag tag-puzzle">🧩 ปริศนา</span>
+          </button>
+
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- ========== GAME SECTIONS ========== -->
+
+  <!-- Truth or Dare -->
+  <section id="game-truthdare" class="section game-section" style="display:none">
+    <button class="btn-back" onclick="showGameHub()">← กลับ</button>
+    <div class="section-inner">
+      <div class="game-header">
+        <div class="game-header-icon">🎯</div>
+        <h2 class="game-header-title">ความจริงหรือท้า</h2>
+      </div>
+      <div class="td-modes">
+        <button class="mode-btn active" id="truthModeBtn" onclick="setTDMode('truth')">💬 ความจริง</button>
+        <button class="mode-btn" id="dareModeBtn" onclick="setTDMode('dare')">🔥 ท้า</button>
+        <button class="mode-btn" id="randomModeBtn" onclick="setTDMode('random')">🎲 สุ่ม</button>
+      </div>
+      <div class="td-card" id="tdCard">
+        <div class="td-type" id="tdType"></div>
+        <div class="td-text" id="tdContent">กดปุ่มเพื่อเริ่ม!</div>
+      </div>
+      <button class="btn-primary btn-glow" onclick="spinTruthDare()">🎯 สุ่มเลย!</button>
+    </div>
+  </section>
+
+  <!-- Would You Rather -->
+  <section id="game-wouldyou" class="section game-section" style="display:none">
+    <button class="btn-back" onclick="showGameHub()">← กลับ</button>
+    <div class="section-inner">
+      <div class="game-header">
+        <div class="game-header-icon">🤔</div>
+        <h2 class="game-header-title">คุณจะเลือก...</h2>
+      </div>
+      <div class="wy-counter">คำถามที่ <span id="wyQuestionNum">1</span></div>
+      <div class="wy-options">
+        <button class="wy-option" id="wyOption1" onclick="chooseWY(1)">
+          <span class="wy-label">A</span>
+          <span class="wy-text" id="wyText1">...</span>
+          <span class="wy-vote" id="wyVotes1"></span>
+        </button>
+        <div class="wy-vs">VS</div>
+        <button class="wy-option" id="wyOption2" onclick="chooseWY(2)">
+          <span class="wy-label">B</span>
+          <span class="wy-text" id="wyText2">...</span>
+          <span class="wy-vote" id="wyVotes2"></span>
+        </button>
+      </div>
+      <div class="wy-result" id="wyResult"></div>
+      <div class="wy-score">💕 ตรงกัน <span id="wyMatchCount">0</span> / <span id="wyTotalCount">0</span></div>
+      <button class="btn-primary" onclick="nextWouldYou()">➡️ คำถามถัดไป</button>
+    </div>
+  </section>
+
+  <!-- Tic Tac Toe -->
+  <section id="game-tictactoe" class="section game-section" style="display:none">
+    <button class="btn-back" onclick="showGameHub()">← กลับ</button>
+    <div class="section-inner">
+      <div class="game-header">
+        <div class="game-header-icon">⭕</div>
+        <h2 class="game-header-title">โอเอกซ์รัก</h2>
+      </div>
+      <div class="ttt-players">
+        <div class="ttt-p" id="tttP1">
+          <span class="ttt-symbol">❤️</span>
+          <span id="tttName1">คุณ</span>
+          <span class="ttt-pts" id="tttScore1">0</span>
+        </div>
+        <div class="ttt-vs">VS</div>
+        <div class="ttt-p" id="tttP2">
+          <span class="ttt-symbol">⭐</span>
+          <span id="tttName2">แฟน</span>
+          <span class="ttt-pts" id="tttScore2">0</span>
+        </div>
+      </div>
+      <div class="ttt-turn" id="tttTurn">ตาของ: ...</div>
+      <div class="ttt-board" id="tttBoard"></div>
+      <div class="ttt-result" id="tttResult"></div>
+      <button class="btn-primary" onclick="resetTTT()">🔄 เล่นใหม่</button>
+    </div>
+  </section>
+
+  <!-- Memory Match -->
+  <section id="game-memory" class="section game-section" style="display:none">
+    <button class="btn-back" onclick="showGameHub()">← กลับ</button>
+    <div class="section-inner">
+      <div class="game-header">
+        <div class="game-header-icon">🧠</div>
+        <h2 class="game-header-title">จับคู่ความจำ</h2>
+      </div>
+      <div class="mem-turn" id="memTurn">ตาของ: ...</div>
+      <div class="mem-board" id="memBoard"></div>
+      <div class="mem-scores">
+        <div class="mem-p"><span id="memName1">คุณ</span>: <span class="mem-pts" id="memScore1">0</span></div>
+        <div class="mem-p"><span id="memName2">แฟน</span>: <span class="mem-pts" id="memScore2">0</span></div>
+      </div>
+      <button class="btn-primary" onclick="resetMemory()">🔄 เล่นใหม่</button>
+    </div>
+  </section>
+
+  <!-- Quick Tap -->
+  <section id="game-quicktap" class="section game-section" style="display:none">
+    <button class="btn-back" onclick="showGameHub()">← กลับ</button>
+    <div class="section-inner">
+      <div class="game-header">
+        <div class="game-header-icon">⚡</div>
+        <h2 class="game-header-title">กดเร็วไว</h2>
+      </div>
+      <div class="qt-display" id="qtDisplay">กดปุ่มเพื่อเริ่ม!</div>
+      <button class="qt-btn" id="qtBtn" onclick="qtTap()">
+        <span id="qtBtnText">เริ่ม!</span>
+      </button>
+      <div class="qt-result" id="qtResult"></div>
+      <div class="qt-score">
+        <span id="qtName1">คุณ</span>: <span id="qtWins1">0</span> — <span id="qtName2">แฟน</span>: <span id="qtWins2">0</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- Dice Battle -->
+  <section id="game-dice" class="section game-section" style="display:none">
+    <button class="btn-back" onclick="showGameHub()">← กลับ</button>
+    <div class="section-inner">
+      <div class="game-header">
+        <div class="game-header-icon">🎲</div>
+        <h2 class="game-header-title">ทอยลูกเต๋า</h2>
+      </div>
+      <div class="dice-arena">
+        <div class="dice-player">
+          <div class="dice-label" id="diceName1">คุณ</div>
+          <div class="dice-die" id="diceValue1">🎲</div>
+        </div>
+        <div class="dice-vs">⚡</div>
+        <div class="dice-player">
+          <div class="dice-label" id="diceName2">แฟน</div>
+          <div class="dice-die" id="diceValue2">🎲</div>
+        </div>
+      </div>
+      <div class="dice-result" id="diceResult"></div>
+      <button class="btn-primary btn-glow" id="rollDiceBtn" onclick="rollDice()">🎲 ทอยเลย!</button>
+      <div class="dice-score"><span id="diceScore1">0</span> — <span id="diceScore2">0</span></div>
+    </div>
+  </section>
+
+  <!-- Compatibility Quiz -->
+  <section id="game-compatible" class="section game-section" style="display:none">
+    <button class="btn-back" onclick="showGameHub()">← กลับ</button>
+    <div class="section-inner">
+      <div class="game-header">
+        <div class="game-header-icon">💕</div>
+        <h2 class="game-header-title">ทดสอบความเข้ากัน</h2>
+      </div>
+      <div class="cq-progress"><div class="cq-bar" id="cqProgressBar"></div></div>
+      <div class="cq-num" id="cqCounter">คำถาม 1/10</div>
+      <div class="cq-question" id="cqQuestion">...</div>
+      <div class="cq-options" id="cqOptions"></div>
+      <div class="cq-waiting" id="cqWaiting" style="display:none">⏳ รอแฟนตอบ...</div>
+      <div class="cq-final" id="cqFinal" style="display:none">
+        <div class="cq-ring"><span class="cq-pct" id="cqPercentage">0%</span></div>
+        <div class="cq-msg" id="cqMessage"></div>
+        <button class="btn-primary" onclick="resetCompatible()">🔄 เล่นใหม่</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- Higher or Lower -->
+  <section id="game-highlow" class="section game-section" style="display:none">
+    <button class="btn-back" onclick="showGameHub()">← กลับ</button>
+    <div class="section-inner">
+      <div class="game-header">
+        <div class="game-header-icon">🃏</div>
+        <h2 class="game-header-title">สูงหรือต่ำ</h2>
+      </div>
+      <div class="hl-cards">
+        <div class="hl-card hl-current" id="hlCurrent">
+          <div class="hl-value" id="hlCurrentValue">?</div>
+          <div class="hl-suit" id="hlCurrentSuit"></div>
+        </div>
+        <div class="hl-arrow">→</div>
+        <div class="hl-card hl-next" id="hlNext">
+          <div class="hl-value" id="hlNextValue">?</div>
+          <div class="hl-suit" id="hlNextSuit"></div>
+        </div>
+      </div>
+      <div class="hl-btns">
+        <button class="btn-hl btn-higher" onclick="guessHL('higher')">⬆️ สูงกว่า</button>
+        <button class="btn-hl btn-lower" onclick="guessHL('lower')">⬇️ ต่ำกว่า</button>
+      </div>
+      <div class="hl-stats">
+        <div class="hl-stat">
+          <span class="hl-stat-label">🔥 ต่อเนื่อง</span>
+          <span class="hl-stat-val" id="hlStreak">0</span>
+        </div>
+        <div class="hl-stat">
+          <span class="hl-stat-label">👑 สถิติ</span>
+          <span class="hl-stat-val" id="hlBest">0</span>
+        </div>
+      </div>
+      <div class="hl-turn" id="hlTurn"></div>
+    </div>
+  </section>
+
+  <!-- Hug Overlay -->
+  <div class="overlay" id="hugOverlay" style="display:none">
+    <div class="overlay-content">
+      <div class="overlay-emoji">🤗</div>
+      <div class="overlay-text" id="hugOverlayText">แฟนส่งกอดมาให้!</div>
+      <div class="overlay-hearts">💕💕💕</div>
+    </div>
+  </div>
+
+  <!-- Floating reactions container -->
+  <div id="reactionContainer" class="reaction-container"></div>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <p>Made with ❤️ for all couples</p>
+  </footer>
+
+  <script src="/socket.io/socket.io.js"></script>
+  <script src="app.js"></script>
+  <script src="games.js"></script>
+</body>
+</html>
