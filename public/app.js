@@ -294,9 +294,9 @@ function showConnected() {
 }
 
 // ===== Start Game Hub =====
-function startPlaying() {
     show('gameHub'); 
     hide('connectedStatus');
+    show('actionBar', 'flex');
     scrollToSection('gameHub');
     socket.emit('game_event', { type: 'start_playing' });
     createConfetti();
@@ -312,6 +312,7 @@ function startPlayingRemote() {
     hide('roomCreated'); 
     hide('joinArea');
     hide('matchmakingArea');
+    show('actionBar', 'flex');
     scrollToSection('gameHub');
     createConfetti();
     document.querySelectorAll('.game-card').forEach((card, i) => {

@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="เลิกเถียง มาเล่นเกมกัน - แพลตฟอร์มเกมสำหรับคู่รัก เล่นด้วยกันออนไลน์แบบเรียลไทม์ทั่วโลก">
-  <title>เลิกเถียง มาเล่นเกมกัน 💕 (Stop Arguing Global)</title>
+  <meta name="description" content="เลิกเถียง มาเล่นเกมกัน - แพลตฟอร์มเกมสำหรับคู่รัก เล่นด้วยกันออนไลน์แบบเรียลไทม์">
+  <title>เลิกเถียง มาเล่นเกมกัน 💕</title>
   <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="style.css">
 </head>
@@ -14,14 +14,6 @@
   <div id="connectionBar" class="conn-bar">
     <div class="conn-dot" id="connectionDot"></div>
     <span id="connectionText">ยังไม่ได้เชื่อมต่อ</span>
-    
-    <!-- Quick interactions enabled on connection -->
-    <div id="connectionActions" class="conn-actions" style="display:none">
-      <button class="btn-action-small" onclick="sendHug()">🤗 ส่งกอด</button>
-      <button class="btn-action-small" onclick="sendReaction('❤️')">❤️</button>
-      <button class="btn-action-small" onclick="sendReaction('😂')">😂</button>
-      <button class="btn-action-small" onclick="sendReaction('😮')">😮</button>
-    </div>
   </div>
 
   <!-- Particle Canvas -->
@@ -30,9 +22,9 @@
   <!-- Hero Section -->
   <header class="hero" id="hero">
     <div class="hero-content">
-      <div class="hero-badge">🎮 GLOBAL COUPLES GAME PLATFORM</div>
+      <div class="hero-badge">🎮 COUPLES GAME PLATFORM</div>
       <h1 class="hero-title">เลิกเถียง<br><span class="gradient-text">มาเล่นเกมกัน</span></h1>
-      <p class="hero-sub">8 เกมสุดสนุกสำหรับคู่รักและผองเพื่อน เล่นด้วยกันออนไลน์เรียลไทม์ได้ทั่วโลก 💕</p>
+      <p class="hero-sub">8 เกมสุดสนุกสำหรับคู่รัก เล่นด้วยกันออนไลน์แบบเรียลไทม์ 💕</p>
       <button class="btn-primary btn-glow" onclick="scrollToSection('roomSection')">
         <span>🚀 เริ่มเล่นเลย!</span>
       </button>
@@ -43,78 +35,71 @@
     </div>
   </header>
 
-  <!-- Room & Lobby Section -->
+  <!-- Room Section -->
   <section id="roomSection" class="section">
     <div class="section-inner">
-      <div class="section-badge">🌐 MULTIPLAYER LOBBY</div>
-      <h2 class="section-title">เชื่อมต่อเพื่อเริ่มเกม</h2>
-      <p class="section-desc">บันทึกชื่อของคุณ เลือกสุ่มจับคู่ทั่วโลก หรือชวนแฟนเข้าห้องเล่นเกม</p>
+      <div class="section-badge">🌐 MULTIPLAYER</div>
+      <h2 class="section-title">เชื่อมต่อกับแฟน</h2>
+      <p class="section-desc">สร้างห้องแล้วส่งรหัสให้แฟน หรือใส่รหัสเข้าร่วมห้อง</p>
 
       <div id="nameInputArea" class="name-input-area">
-        <input type="text" id="myName" class="input-neon" placeholder="✨ กรอกชื่อของคุณที่นี่" maxlength="20">
+        <input type="text" id="myName" class="input-neon" placeholder="✨ ชื่อของคุณ" maxlength="20">
       </div>
 
       <div id="roomOptions" class="room-grid">
-        <button class="room-card card-match" onclick="startMatchmaking()">
-          <div class="room-card-emoji">⚡</div>
-          <h3>จับคู่คนเล่น</h3>
-          <p>สุ่มคนเล่นออนไลน์เรียลไทม์</p>
-        </button>
         <button class="room-card card-create" onclick="createRoom()">
           <div class="room-card-emoji">🏠</div>
           <h3>สร้างห้อง</h3>
-          <p>สร้างห้องชวนแฟนด้วยรหัส</p>
+          <p>สร้างห้องใหม่แล้วส่งรหัสให้แฟน</p>
         </button>
         <button class="room-card card-join" onclick="showJoinRoom()">
           <div class="room-card-emoji">🔗</div>
           <h3>เข้าร่วมห้อง</h3>
-          <p>ใส่รหัส 6 หลักเข้าร่วมแฟน</p>
+          <p>ใส่รหัส 6 หลักที่แฟนส่งมา</p>
+        </button>
+        <button class="room-card card-match" onclick="startMatchmaking()">
+          <div class="room-card-emoji">🎲</div>
+          <h3>สุ่มหาคู่เล่น</h3>
+          <p>จับคู่อัตโนมัติกับใครสักคน!</p>
         </button>
       </div>
 
-      <!-- Matchmaking Area -->
-      <div id="matchmakingArea" class="matchmaking-area" style="display:none">
-        <div class="spinner-container">
-          <div class="double-bounce1"></div>
-          <div class="double-bounce2"></div>
-        </div>
-        <p id="matchmakingText">กำลังสุ่มหาคู่เล่นจากทั่วโลก... ⏳</p>
-        <button class="btn-ghost" onclick="cancelMatchmaking()">❌ ยกเลิกการค้นหา</button>
-      </div>
-
-      <!-- Join Area -->
       <div id="joinArea" class="join-area" style="display:none">
         <input type="text" id="roomCodeInput" class="input-neon input-code" placeholder="ใส่รหัส 6 หลัก" maxlength="6">
         <button class="btn-primary" onclick="joinRoom()">🔗 เข้าร่วม</button>
         <button class="btn-ghost" onclick="showRoomOptions()">← กลับ</button>
       </div>
 
-      <!-- Room Created (Host State) -->
       <div id="roomCreated" class="room-created" style="display:none">
         <div class="code-box">
           <div class="code-label">รหัสห้องของคุณ</div>
           <div id="roomCodeDisplay" class="code-display">------</div>
-          <div class="code-buttons">
-            <button class="btn-copy" onclick="copyRoomCode()">
-              <span id="copyCodeText">📋 คัดลอกรหัส</span>
-            </button>
-            <button class="btn-copy" onclick="copyRoomLink()">
-              <span id="copyLinkText">🔗 ลิงก์ด่วน</span>
-            </button>
-          </div>
+          <button class="btn-copy" onclick="copyRoomCode()">
+            <span id="copyCodeText">📋 คัดลอกรหัส</span>
+          </button>
         </div>
         <div class="waiting-anim">
           <div class="waiting-dots"><span></span><span></span><span></span></div>
-          <p id="waitingText">ส่งรหัสหรือลิงก์ให้แฟนแล้วรอการเชื่อมต่อ...</p>
+          <p id="waitingText">รอแฟนเข้าร่วม...</p>
         </div>
+        <button class="btn-copy" onclick="copyRoomLink()" style="margin-top:12px">
+          <span id="copyLinkText">🔗 ลิงก์ด่วน</span>
+        </button>
       </div>
 
-      <!-- Connected Box -->
+      <div id="matchmakingArea" class="matchmaking-area" style="display:none">
+        <div class="waiting-anim">
+          <div class="waiting-dots"><span></span><span></span><span></span></div>
+          <p>กำลังค้นหาคู่เล่น...</p>
+        </div>
+        <button class="btn-ghost" onclick="cancelMatchmaking()">❌ ยกเลิก</button>
+      </div>
+
       <div id="connectedStatus" class="connected-box" style="display:none">
         <div class="connected-emoji">💕</div>
         <h3 id="connectedText">เชื่อมต่อสำเร็จ!</h3>
         <p id="partnerNameDisplay"></p>
-        <button class="btn-primary btn-glow btn-play" onclick="startPlaying()">🎮 เข้าสู่ห้องเลือกเกม!</button>
+        <button class="btn-primary btn-glow btn-play" onclick="startPlaying()">🎮 เริ่มเล่นเลย!</button>
       </div>
     </div>
   </section>
@@ -124,8 +109,8 @@
     <section class="section">
       <div class="section-inner">
         <div class="section-badge">🎮 SELECT GAME</div>
-        <h2 class="section-title">เลือกเกมย่อย</h2>
-        <p class="section-desc">คลิกเลือกเกมที่คุณสองคนต้องการประลองฝีมือกัน!</p>
+        <h2 class="section-title">เลือกเกม</h2>
+        <p class="section-desc">เลือกเกมที่อยากเล่นด้วยกัน!</p>
         <div class="game-grid" id="gameGrid">
 
           <button class="game-card" onclick="openGame('truthdare')" style="--card-color: #ff6b9d; --card-glow: rgba(255,107,157,0.3)">
@@ -286,7 +271,17 @@
         </div>
       </div>
       <div class="ttt-turn" id="tttTurn">ตาของ: ...</div>
-      <div class="ttt-board" id="tttBoard"></div>
+      <div class="ttt-board" id="tttBoard">
+        <button class="ttt-cell" data-index="0" onclick="tttMove(0)"></button>
+        <button class="ttt-cell" data-index="1" onclick="tttMove(1)"></button>
+        <button class="ttt-cell" data-index="2" onclick="tttMove(2)"></button>
+        <button class="ttt-cell" data-index="3" onclick="tttMove(3)"></button>
+        <button class="ttt-cell" data-index="4" onclick="tttMove(4)"></button>
+        <button class="ttt-cell" data-index="5" onclick="tttMove(5)"></button>
+        <button class="ttt-cell" data-index="6" onclick="tttMove(6)"></button>
+        <button class="ttt-cell" data-index="7" onclick="tttMove(7)"></button>
+        <button class="ttt-cell" data-index="8" onclick="tttMove(8)"></button>
+      </div>
       <div class="ttt-result" id="tttResult"></div>
       <button class="btn-primary" onclick="resetTTT()">🔄 เล่นใหม่</button>
     </div>
@@ -413,15 +408,26 @@
   </section>
 
   <!-- Hug Overlay -->
-  <div class="overlay" id="hugOverlay" style="display:none">
+  <div class="overlay" id="hugOverlay" style="display:none" onclick="this.style.display='none'">
     <div class="overlay-content">
       <div class="overlay-emoji">🤗</div>
       <div class="overlay-text" id="hugOverlayText">แฟนส่งกอดมาให้!</div>
       <div class="overlay-hearts">💕💕💕</div>
+      <p style="margin-top:16px;font-size:0.8rem;opacity:0.5">แตะเพื่อปิด</p>
     </div>
   </div>
 
-  <!-- Floating reactions container -->
+  <!-- Floating Action Bar (emoji + hug) -->
+  <div id="actionBar" class="action-bar" style="display:none">
+    <button class="react-btn" onclick="sendReaction('😂')">😂</button>
+    <button class="react-btn" onclick="sendReaction('💖')">💖</button>
+    <button class="react-btn" onclick="sendReaction('🥺')">🥺</button>
+    <button class="react-btn" onclick="sendReaction('😮')">😮</button>
+    <button class="react-btn" onclick="sendReaction('🔥')">🔥</button>
+    <button class="react-btn hug-btn" id="hugBtn" onclick="sendHug()">🤗</button>
+  </div>
+
+  <!-- Floating Reaction Container -->
   <div id="reactionContainer" class="reaction-container"></div>
 
   <!-- Footer -->
